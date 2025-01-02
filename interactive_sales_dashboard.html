@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Sales Performance Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Sales Performance Dashboard</h1>
+    <input type="file" id="upload" accept=".json" />
+    <div id="visualizations">
+        <div id="attrition-rate" style="width: 100%; height: 400px;"></div>
+        <div id="distance-distribution" style="width: 100%; height: 400px;"></div>
+        <div id="income-analysis" style="width: 100%; height: 400px;"></div>
+        <div id="overtime-satisfaction" style="width: 100%; height: 400px;"></div>
+        <div id="performance-tenure" style="width: 100%; height: 400px;"></div>
+    </div>
+
+    <script>
+        document.getElementById('upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const data = JSON.parse(e.target.result);
+                generateDashboard(data);
+            };
+
+            reader.readAsText(file);
+        });
+
+        function generateDashboard(data) {
+            const departments = [...new Set(data.map(item => item.Department))];
+            const jobRoles = [...new Set(data.map(item => item.JobRole))];
+
+            // Attrition Rate by Department and Job Role
+            const attritionData = departments.map(dept => {
+                const filtered = data.filter(item => item.Department === dept);
+                return {
+                    x: jobRoles,
+                    y: jobRoles.map(role => filtered.filter(item => item.JobRole === role && item.Attrition === 'Yes').length),
+                    name: dept,
+                    type: 'bar'
+                };
+            });
+            
+            Plotly.newPlot('attrition-rate', attritionData, {
+                title: 'Attrition Rate by Department and Job Role',
+                barmode: 'stack',
+                xaxis: { title: 'Job Roles' },
+                yaxis: { title: 'Number of Attritions' }
+            });
+
+            // Employee Distribution by Distance from Home
+            const distances = data.map(item => item.DistanceFromHome);
+            Plotly.newPlot('distance-distribution', [{
+                x: distances,
+                type: 'histogram',
+            }], {
+                title: 'Employee Distribution by Distance from Home',
+                xaxis: { title: 'Distance from Home (miles)' },
+                yaxis: { title: 'Number of Employees' }
+            });
+
+            // Average Monthly Income by Job Role
+            const incomeData = jobRoles.map(role => {
+                const roleData = data.filter(item => item.JobRole === role);
+                return {
+                    x: [...new Set(roleData.map(item => item.JobLevel))],
+                    y: [...new Set(roleData.map(item => item.JobLevel))].map(level => {
+                        const levelData = roleData.filter(item => item.JobLevel === level);
+                        return levelData.reduce((sum, val) => sum + val.MonthlyIncome, 0) / levelData.length;
+                    }),
+                    type: 'bar',
+                    name: role
+                };
+            });
+
+            Plotly.newPlot('income-analysis', incomeData, {
+                title: 'Average Monthly Income by Job Role and Job Level',
+                barmode: 'group',
+                xaxis: { title: 'Job Levels' },
+                yaxis: { title: 'Average Monthly Income' }
+            });
+
+            // Overtime Analysis vs Job Satisfaction
+            const satisfactionData = data.map(item => ({
+                x: item.OverTime === 'Yes' ? 1 : 0,
+                y: item.JobSatisfaction
+            }));
+            Plotly.newPlot('overtime-satisfaction', [{
+                x: satisfactionData.map(d => d.x),
+                y: satisfactionData.map(d => d.y),
+                mode: 'markers',
+                type: 'scatter'
+            }], {
+                title: 'Overtime vs Job Satisfaction',
+                xaxis: { title: 'Overtime (1: Yes, 0: No)' },
+                yaxis: { title: 'Job Satisfaction' }
+            });
+
+            // Performance Rating vs Total Working Years
+            const performanceData = data.map(item => ({
+                x: item.TotalWorkingYears,
+                y: item.PerformanceRating
+            }));
+
+            Plotly.newPlot('performance-tenure', [{
+                x: performanceData.map(d => d.x),
+                y: performanceData.map(d => d.y),
+                mode: 'lines+markers'
+            }], {
+                title: 'Performance Rating vs Total Working Years',
+                xaxis: { title: 'Total Working Years' },
+                yaxis: { title: 'Performance Rating' }
+            });
+        }
+    </script>
+</body>
+</html>
