@@ -46,12 +46,12 @@ Phases of Project Execution -
     Also we import Sammple Dataset in json format for Better Result .\
     For Eg -  We use HR Dataset.  
  
-**Prompt1 -  **This is the structure of my  dataset  in JSON format. 
+**Prompt1** -  **This is the structure of my  dataset  in JSON format. 
             Please analyze it and recommend  six key data visualization metrics
            that would be ideal for building an interactive sales dashboard also provide legend of each . 
             Additionally, provide a brief explanation for the relevance of each metric to the  dashboard.**
             
-**
+
 When we Insert Sample dataset into Chat_gpt along with Above prompt 
   Result _    Six Key Data Visualization Metrics for an Interactive Sales Dashboard
 Here are six metrics to visualize in your dashboard, including legends and their relevance:
@@ -258,7 +258,7 @@ Download Interactive Sales Dashboard ​
 
 
 
- # **   4.c - Insert Dataset into Html File . - **
+ # **4.c - Insert Dataset into Html File . -**
    Insert Dataset for showing Interactive Dashboard . 
 
 
