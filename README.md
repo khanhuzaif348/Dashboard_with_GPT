@@ -1,6 +1,6 @@
-# Dashboard_with_GPT
+#Dashboard_with_GPT
 
-#**Now we create a Dashboard within  10 minute using Chat GPT**
+# **Now we create a Dashboard within  10 minute using Chat GPT**
 
 Requirements -  
             1 - Knowledge of Prompt
@@ -28,9 +28,9 @@ Phases of Project Execution -
             
 
  # 1- Open Chat gpt and login it  
-   # ** Yes  **    ✔ 
+   # **Yes**    ✔ 
 
- # **  2 - Preparation of  Dataset  **
+ # **2 - Preparation of  Dataset**
  If dataset not in JSON  format . Then convert it into JSON format.
     Converter Tool Link  - https://csvjson.com/ 
    
